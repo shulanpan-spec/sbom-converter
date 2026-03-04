@@ -1,0 +1,11 @@
+# Python cache
+__pycache__/
+
+# Virtual environment
+.venv/
+
+# Input Excel files
+*.xlsx
+
+# Generated SBOM outputs
+*.sbom.json
