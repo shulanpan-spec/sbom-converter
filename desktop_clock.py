@@ -6,7 +6,6 @@ import sys
 import os
 import winreg
 
-# Windows DPI awareness
 if sys.platform == "win32":
     try:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
@@ -62,6 +61,7 @@ class DesktopClock(tk.Tk):
         self.resizable(False, False)
         self.configure(bg=BG)
         self.overrideredirect(True)
+        self.attributes("-topmost", True)
         self._drag_x = 0
         self._drag_y = 0
 
@@ -97,45 +97,44 @@ class DesktopClock(tk.Tk):
                   cursor="hand2", command=self.destroy).pack(side="right", padx=6)
 
         pin_btn = tk.Button(bar, text="\U0001f4cc", font=(FONT, 10),
-                            fg=FG_DIM, bg="#1a1a30", bd=0,
+                            fg=ACCENT, bg="#1a1a30", bd=0,
                             activebackground="#1a1a30", cursor="hand2",
                             command=self._toggle_pin)
         pin_btn.pack(side="right")
         self._pin_btn = pin_btn
-        self._pinned = False
+        self._pinned = True
 
         self._autostart_var = tk.BooleanVar(value=is_autostart_enabled())
-        auto_cb = tk.Checkbutton(
+        tk.Checkbutton(
             bar, text="开机启动", font=(FONT, 9),
             variable=self._autostart_var,
             command=self._toggle_autostart,
             fg=FG_DIM, bg="#1a1a30",
             activebackground="#1a1a30", activeforeground=ACCENT,
             selectcolor="#1a1a30",
-        )
-        auto_cb.pack(side="right", padx=(0, 8))
+        ).pack(side="right", padx=(0, 8))
 
         bar.bind("<ButtonPress-1>", self._drag_start)
         bar.bind("<B1-Motion>", self._drag_move)
 
-        content = tk.Frame(outer, bg=BG, padx=30, pady=20)
+        content = tk.Frame(outer, bg=BG, padx=18, pady=12)
         content.pack()
 
-        tk.Label(content, text="WORK WEEK", font=(FONT, 11),
+        tk.Label(content, text="WORK WEEK", font=(FONT, 8),
                  fg=FG_DIM, bg=BG).pack()
 
         self.week_label = tk.Label(content, text="",
-                                   font=(FONT, 80, "bold"),
+                                   font=(FONT, 44, "bold"),
                                    fg=ACCENT, bg=BG)
-        self.week_label.pack(pady=(0, 6))
+        self.week_label.pack(pady=(0, 2))
 
         self.date_label = tk.Label(content, text="",
-                                   font=(FONT, 15), fg=FG_PRIMARY, bg=BG)
+                                   font=(FONT, 10), fg=FG_PRIMARY, bg=BG)
         self.date_label.pack()
 
         self.time_label = tk.Label(content, text="",
-                                   font=(FONT, 30), fg=FG_PRIMARY, bg=BG)
-        self.time_label.pack(pady=(4, 0))
+                                   font=(FONT, 18), fg=FG_PRIMARY, bg=BG)
+        self.time_label.pack(pady=(2, 0))
 
     def _toggle_pin(self):
         self._pinned = not self._pinned
