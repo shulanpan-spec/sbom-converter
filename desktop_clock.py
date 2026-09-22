@@ -42,7 +42,6 @@ def set_autostart(enable: bool):
                         winreg.KEY_SET_VALUE) as key:
         if enable:
             path = get_exe_path()
-            # pythonw suppresses the console window when running as .py
             if path.endswith(".py"):
                 pythonw = os.path.join(os.path.dirname(sys.executable), "pythonw.exe")
                 value = f'"{pythonw}" "{path}"'
@@ -86,8 +85,11 @@ class DesktopClock(tk.Tk):
         bar.pack(fill="x")
         bar.pack_propagate(False)
 
-        tk.Label(bar, text="Work Week Clock", font=(FONT, 10),
-                 fg=FG_DIM, bg="#1a1a30").pack(side="left", padx=10)
+        title_lbl = tk.Label(bar, text="Work Week Clock", font=(FONT, 10),
+                             fg=FG_DIM, bg="#1a1a30", cursor="fleur")
+        title_lbl.pack(side="left", padx=10)
+        title_lbl.bind("<ButtonPress-1>", self._drag_start)
+        title_lbl.bind("<B1-Motion>", self._drag_move)
 
         tk.Button(bar, text="×", font=(FONT, 12, "bold"),
                   fg=FG_DIM, bg="#1a1a30", bd=0,
